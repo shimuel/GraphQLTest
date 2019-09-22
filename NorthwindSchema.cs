@@ -1,25 +1,18 @@
+using System;
 using Newtonsoft.Json.Linq;
 using GraphQL;
 using GraphQL.Types;
+//using GraphQL.Authorization;
 
 namespace GraphQLTest
 {
     public class NorthwindSchema : GraphQL.Types.Schema
     {
-            public NorthwindSchema(IDependencyResolver resolver): base(resolver)
+            public NorthwindSchema(IServiceProvider serviceProvider): base(serviceProvider)
             {
-                Query = resolver.Resolve<NorthwindQuery>();
-                //Mutation = resolver.Resolve<NorthwindMutation>();
+                  Query = (NorthwindQuery)serviceProvider.GetService(typeof(NorthwindQuery));
             }
     }
-
-    public class NorthwindMutation : ObjectGraphType
-    {
-        public NorthwindMutation()
-        {
-        }
-    }
-
 
     public class NorthwindQuery : ObjectGraphType
     {
@@ -32,14 +25,14 @@ namespace GraphQLTest
                         new QueryArgument<IntGraphType>{ Name = "size" }
                 ),
                 resolve: context => {
-                    var index = context.GetArgument<int>("index"); 
-                    var size = context.GetArgument<int>("size"); 
+                        var index = context.GetArgument<int>("index"); 
+                        var size = context.GetArgument<int>("size"); 
 
-                    var data = Repo.GetData();
-                    var page = Repo.ToPaginateGraphTypeAsync(data, index, size, 0);
- 
-                    return page;
-            }); 
+                        var data = Repo.GetData();
+                        var page = Repo.ToPaginateGraphTypeAsync(data, index, size, 0);
+    
+                        return page.Items;
+                }); 
         }
     }
 

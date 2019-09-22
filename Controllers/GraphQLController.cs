@@ -20,7 +20,6 @@ namespace GraphQLTest {
         }
         
         [HttpPost]
-        //[Authorize]
         public async Task<IActionResult> Post([FromBody] GraphQLQuery query)
         {
             if (query == null) { throw new ArgumentNullException(nameof(query)); }

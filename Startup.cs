@@ -30,13 +30,11 @@ namespace GraphQLTest
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<IDependencyResolver>(s => new FuncDependencyResolver(s.GetRequiredService));
-
+            services.AddSingleton<IServiceProvider>(s => new GraphQL.FuncServiceProvider(s.GetRequiredService));
             services.AddSingleton<IDocumentExecuter, DocumentExecuter>();
             //services.AddSingleton<IDocumentWriter, DocumentWriter>();
                         
             services.AddSingleton<NorthwindQuery>();
-            services.AddSingleton<NorthwindMutation>();
             services.AddSingleton<OrderDetailType>();
             services.AddSingleton<OrderType>();
             services.AddSingleton(typeof(PaginatedGraphType<>));
